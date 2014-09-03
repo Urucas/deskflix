@@ -1,4 +1,4 @@
 deskflix
 ========
 
-Netflix native app + Remote control
+Netflix desktop app + Remote control
