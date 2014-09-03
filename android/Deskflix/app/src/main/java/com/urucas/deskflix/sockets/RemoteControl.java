@@ -23,7 +23,7 @@ import java.util.HashMap;
 public class RemoteControl {
 
     private static final String TAG_NAME = "RemoteControl";
-    private static String port = "8006";
+    private static String port = "8008";
     private final RemoteControlCallback _callback;
     private final Activity _activity;
 
@@ -41,7 +41,7 @@ public class RemoteControl {
         _myip = Utils.getIPAddress(true);
     }
 
-    public void search4Popcorns() {
+    public void search4Sockets() {
 
         if(!Utils.isWIFIConnected(_activity)){
             Utils.Toast(_activity, R.string.noconnection, Toast.LENGTH_SHORT);
@@ -92,7 +92,12 @@ public class RemoteControl {
                     if(localname != null) {
                         final String finalLocalname = localname;
                         sockectConnected(socketes.get(socket), socket, finalLocalname);
-                        Log.i("connected", "yeap");
+                        _activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                _callback.onSocketFound(getConnectdSocketsName());
+                            }
+                        });
                     }
                 }
             });
@@ -104,7 +109,6 @@ public class RemoteControl {
                     socket.close();
                     socket.off();
                     socketes.remove(socket);
-
                 }
             });
 
@@ -115,12 +119,14 @@ public class RemoteControl {
                     socket.close();
                     socket.off();
                     socketes.remove(socket);
+
                     _activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            _callback.onPopCornDisconected(getConnectdSocketsName());
+                            _callback.onSocketDisconected(getConnectdSocketsName());
                         }
                     });
+
                 }
             });
 
@@ -134,14 +140,13 @@ public class RemoteControl {
     }
 
     private void sockectConnected(String ip, Socket socket, String localname) {
-
         if(socket == null) return;
         connectedSocketsName.put(localname, ip);
         connectedSockets.put(ip, socket);
 
     }
 
-    public boolean selectPopcornApp(String localname) {
+    public boolean selectSocket(String localname) {
 
         String socketip = connectedSocketsName.get(localname);
         socket = connectedSockets.get(socketip);
@@ -182,6 +187,10 @@ public class RemoteControl {
         socket.emit("fullscreen");
     }
 
+    public void toggle() {
+        socket.emit("toggle play");
+    }
+
     public void mute() {
         socket.emit("mute");
     }
@@ -190,44 +199,12 @@ public class RemoteControl {
         socket.emit("press esc");
     }
 
-    public void moveRight() {
-        socket.emit("move right");
-    }
-
-    public void moveLeft() {
-        socket.emit("move left");
-    }
-
-    public void moveUp() {
-        socket.emit("move up");
-    }
-
-    public void moveDown() {
-        socket.emit("move down");
-    }
-
-    public void enter() {
-        socket.emit("press enter");
-    }
-
-    public void startStreaming() {
-        socket.emit("start streaming");
-    }
-
-    public void cancelStreaming() {
-        socket.emit("cancel streaming");
-    }
-
     public void volumeUp() {
         socket.emit("volume up");
     }
 
     public void volumeDown() {
         socket.emit("volume down");
-    }
-
-    public void playTrailer() {
-        socket.emit("play trailer");
     }
 
 }

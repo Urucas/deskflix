@@ -20,6 +20,52 @@ try {
 		});
 	}
 
+	var remotecontrol = new (function(){
+		
+		this.triggerKeyPress = function(key) {
+			var el = document.getElementsByTagName("body");
+				  el = el[0];
+			if(document.createEventObject){
+				var eventObj = document.createEventObject();
+				eventObj.keyCode = key;
+				el.fireEvent("onkeydown", eventObj);   
+			} else if(document.createEvent)	{
+				var eventObj = document.createEvent("Events");
+				eventObj.initEvent("keydown", true, true);
+				eventObj.which = key;
+				el.dispatchEvent(eventObj);
+			} 
+		}
+
+		this.enter = function() {
+			this.triggerKeyPress(13);
+		}
+
+		this.esc = function() {
+			this.triggerKeyPress(27);
+		}
+
+		this.toggle = function() {
+			this.triggerKeyPress(32);
+		}
+
+		this.fullscreenToggle = function() {
+			try {
+				var nativeWindow = require('nw.gui').Window.get();
+				if(nativeWindow.isFullscreen) {
+					nativeWindow.leaveFullscreen();
+					nativeWindow.focus();
+				}else{
+					nativeWindow.enterFullscreen();
+					nativeWindow.focus();
+				}
+			}catch(e){
+				alert(e);
+			}
+		}
+
+	});
+
 	var rcapp  = require('express')();
 	var rchttp = require('http').Server(rcapp);
 
@@ -36,9 +82,18 @@ try {
 	var io = require('socket.io')(rchttp);
 	io.on('connection', function(socket){
 
-		console.log("connected");
-		var body = window.document.getElementByTagName("body")[0];
-		console.log(body);
+		console.log("socket connected");
+		socket.emit("my name is", {name:localname});
+		
+		socket.on("fullscreen", function(){
+			console.log("fullscreen toogle");
+			remotecontrol.fullscreenToggle();
+		});
+
+		socket.on("toggle play", function(){
+			console.log("toggle");
+			remotecontrol.toggle();
+		});
 
 	});
 

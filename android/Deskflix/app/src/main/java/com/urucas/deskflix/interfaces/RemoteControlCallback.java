@@ -7,8 +7,8 @@ import java.util.ArrayList;
  */
 public interface RemoteControlCallback {
 
-    public void onPopcornFound(ArrayList<String> socketsName);
+    public void onSocketFound(ArrayList<String> socketsName);
 
-    public void onPopCornDisconected(ArrayList<String> socketsName);
+    public void onSocketDisconected(ArrayList<String> socketsName);
 
 }
