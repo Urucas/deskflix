@@ -3,6 +3,9 @@
   "name": "deskflix",
   "description": "Netflix Desktop app + Remote control",
   "version": "0.0.0",
+  "inject-js-end": "bar.js",  
+	"node" : true, 
+	"no-edit-menu": false,
 	"keywords": [
     "javascript",
     "js",
@@ -11,21 +14,22 @@
     "node",
     "webkit",
     "webkit",
-    "emulator",
 		"netflix"
   ],
   "window": {
     "title": "Deskflix",
     "icon": "link.png",
-    "toolbar": false,
+    "toolbar": true,
     "frame": false,
-    "width": 1024,
-    "height": 700,
-		"position" : "center",
-		"resizable" : false,
-		"toolbar" : false
+	  "width": 1100,
+    "height": 618,
+    "min_width": 990,
+    "min_height": 556,
+    "resizable": true,
+		"position" : "center"
   },
   "webkit": {
-    "plugin": true
+    "plugin": true,
+		"page-cache": false
   }
  }

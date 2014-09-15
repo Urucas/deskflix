@@ -1,6 +1,13 @@
 var gui = require("nw.gui");
 		gui.Window.get().showDevTools();
 
+var mb = new gui.Menu({type:"menubar"});
+		mb.createMacBuiltin("Deskflix");
+		gui.Window.get().menu = mb;
+
+var win = gui.Window.get();
+
+/*
 try {
 
 	var os=require('os');
@@ -19,53 +26,7 @@ try {
 			}
 		});
 	}
-
-	var remotecontrol = new (function(){
-		
-		this.triggerKeyPress = function(key) {
-			var el = document.getElementsByTagName("body");
-				  el = el[0];
-			if(document.createEventObject){
-				var eventObj = document.createEventObject();
-				eventObj.keyCode = key;
-				el.fireEvent("onkeydown", eventObj);   
-			} else if(document.createEvent)	{
-				var eventObj = document.createEvent("Events");
-				eventObj.initEvent("keydown", true, true);
-				eventObj.which = key;
-				el.dispatchEvent(eventObj);
-			} 
-		}
-
-		this.enter = function() {
-			this.triggerKeyPress(13);
-		}
-
-		this.esc = function() {
-			this.triggerKeyPress(27);
-		}
-
-		this.toggle = function() {
-			this.triggerKeyPress(32);
-		}
-
-		this.fullscreenToggle = function() {
-			try {
-				var nativeWindow = require('nw.gui').Window.get();
-				if(nativeWindow.isFullscreen) {
-					nativeWindow.leaveFullscreen();
-					nativeWindow.focus();
-				}else{
-					nativeWindow.enterFullscreen();
-					nativeWindow.focus();
-				}
-			}catch(e){
-				alert(e);
-			}
-		}
-
-	});
-
+	
 	var rcapp  = require('express')();
 	var rchttp = require('http').Server(rcapp);
 
@@ -86,13 +47,42 @@ try {
 		socket.emit("my name is", {name:localname});
 		
 		socket.on("fullscreen", function(){
-			console.log("fullscreen toogle");
-			remotecontrol.fullscreenToggle();
+			try {
+				var nativeWindow = require('nw.gui').Window.get();
+				if(nativeWindow.isFullscreen) {
+					nativeWindow.leaveFullscreen();
+					nativeWindow.focus();
+				}else{
+					nativeWindow.enterFullscreen();
+					nativeWindow.focus();
+				}
+			}catch(e){
+				alert(e);
+			}
 		});
 
 		socket.on("toggle play", function(){
-			console.log("toggle");
-			remotecontrol.toggle();
+			console.log("toggle");	
+			var nativeWindow = require('nw.gui').Window.get();
+			try {
+			var document = nativeWindow.window.document;
+			var el = document.getElementsByTagName("body");
+				  el = el[0];
+
+			var el = document.getElementById("SLPlayer");		
+
+				if(document.createEventObject){
+					var eventObj = document.createEventObject();
+					eventObj.keyCode = 32;
+					el.fireEvent("onkeydown", eventObj);   
+				} else if(document.createEvent)	{
+					var eventObj = document.createEvent("Events");
+					eventObj.initEvent("keydown", true, true);
+					eventObj.which = 32;
+					el.dispatchEvent(eventObj);
+				} 
+
+			}catch(e) { alert(e); }
 		});
 
 	});
@@ -106,10 +96,6 @@ try {
 	alert("rm error");
 	alert(e); 
 }
+*/
 
 window.location.assign("http://netflix.com");
-/*
-
-var frame = document.getElementById("nf-frame");
-		frame.src = "http://netflix.com";
-*/
