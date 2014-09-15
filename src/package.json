@@ -31,5 +31,6 @@
   "webkit": {
     "plugin": true,
 		"page-cache": false
-  }
+  },
+	"debug" : 1
  }

@@ -1,4 +1,3 @@
-
 try {
 
 	var popUp = document.getElementById("BobMovie");
@@ -20,7 +19,14 @@ try {
 
 			title = title.firstChild.nodeValue;
 			title = title.trim();
-			title = encodeURIComponent(title + " trailer");	
+
+			var duration = el.getElementsByClassName("duration")[0];
+					duration = duration.firstChild.nodeValue;
+
+			title+= duration.indexOf("min") == -1 ?	" series trailer" : " movie trailer";
+
+			console.log(title);
+			title = encodeURIComponent(title);	
 
 			var searchURL = "http://gdata.youtube.com/feeds/api/videos?q="+title+"&format=1&alt=json";
 			$.get(searchURL, [], function(response){
@@ -49,7 +55,7 @@ try {
 
 	popUpObserver.observe(popUp, observerConfig);
 
-}catch(e) { console.log(e); }
+}catch(e) { }
 
 function openTrailerWindow(url) {
 
@@ -57,10 +63,12 @@ function openTrailerWindow(url) {
 	// <iframe width="1280" height="720" src="//www.youtube.com/embed/u9av38iK_Y0?rel=0" frameborder="0" allowfullscreen></iframe>
 	var src = "//www.youtube.com/embed/";
 			src+= getVideoID(url);
-			src+= "?rel=0";
+			src+= "?rel=0&showinfo=0&autoplay=1";
+	
+	
 
 	var modal = document.createElement('div');
-			modal.style.position = "absolute";
+			modal.style.position = "fixed";
 			modal.style.width = "100%";
 			modal.style.height = "100%";
 			modal.style.top = 0;
@@ -68,10 +76,18 @@ function openTrailerWindow(url) {
 			modal.id = "trailer-modal";
 			modal.style.backgroundColor = "rgba(0,0,0,0.8)";
 			modal.style.zIndex = 99999;
-			modal.innerHTML = '<a onclick="closeTrailerWindow();">Close</a><iframe width="100%" height="100%" src="'+src+'" frameborder="0"></iframe>';
+			modal.innerHTML = '<a class="trailer-modal-close" onclick="closeTrailerWindow();">Close</a><iframe width="100%" height="100%" src="'+src+'" frameborder="0"></iframe>';
 
 	var body = document.getElementsByTagName("body")[0];
 			body.appendChild(modal);
+
+	var a = modal.getElementsByClassName("trailer-modal-close")[0];
+			a.style.position = "absolute";
+			a.style.color = "#fff";
+			a.style.top = "0px";
+			a.style.right = "0px";
+			a.style.padding = "10px";
+			a.style.cursor = "pointer";
 }
 
 function closeTrailerWindow() {

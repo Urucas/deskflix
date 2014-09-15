@@ -1,5 +1,11 @@
+var jf = require("jsonfile"), config;
+		config = jf.readFileSync("package.json");
+
 var gui = require("nw.gui");
-		gui.Window.get().showDevTools();
+
+if(config.debug == 1)	{
+	gui.Window.get().showDevTools();
+}
 
 var mb = new gui.Menu({type:"menubar"});
 		mb.createMacBuiltin("Deskflix");
